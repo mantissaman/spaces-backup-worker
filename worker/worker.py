@@ -42,7 +42,7 @@ channel = connection.channel()
 
 
 channel.queue_declare(queue='spaces_backup_queue', durable=True)
-print(' [*] Waiting for messages. To exit press CTRL+C')
+print(' [*] Started from Nodemon - Waiting for messages. To exit press CTRL+C')
 
 s3 = boto3.client('s3',
                   region_name=S3_REGION_NAME,
@@ -74,8 +74,7 @@ def delete_file(file_name):
 def callback(ch, method, properties, body):
     try:
         data = json.loads(body)
-        logger.info(
-            f"Received {data['operation']} operation for file {data['file_name']}")
+        logger.info(f"Received {data['operation']} operation for file {data['file_name']}")
 
         if data['operation'] == "DOWNLOAD":
             download_file(data['file_name'])
