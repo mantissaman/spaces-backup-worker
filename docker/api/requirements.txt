@@ -1,0 +1,4 @@
+Flask
+pika
+boto3
+pyyaml

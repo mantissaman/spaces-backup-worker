@@ -1,3 +1,6 @@
+Flask
+pika
+boto3
 pika
 boto3
 pylint

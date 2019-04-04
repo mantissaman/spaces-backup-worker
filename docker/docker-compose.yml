@@ -7,9 +7,9 @@ services:
       - '5672:5672' 
       - '8080:15672'
     environment:
-      - RABBITMQ_DEFAULT_USER=rabbitmquser
-      - RABBITMQ_DEFAULT_PASS=pa55word
-  api:
+      RABBITMQ_DEFAULT_USER: rabbitmquser
+      RABBITMQ_DEFAULT_PASS: pa55word
+  worker:
     build:
       dockerfile: Dockerfile.dev
       context: ./worker
@@ -22,16 +22,45 @@ services:
       - ../files:/files
       - ../logs:/logs
     environment:
-      - PYTHONUNBUFFERED=0
-      - RABBITMQ_HOST=rabbitmq
-      - RABBITMQ_PORT=5672
-      - RABBITMQ_DEFAULT_USER=rabbitmquser
-      - RABBITMQ_DEFAULT_PASS=pa55word
-      - S3_REGION_NAME=ams3
-      - S3_ENDPOINT_URI=https://ams3.digitaloceanspaces.com
-      - S3_BUCKET_NAME=swat1
-      - DO_ACCESS_KEY_ID=${DO_ACCESS_KEY_ID}
-      - DO_SECRET_ACCESS_KEY=${DO_SECRET_ACCESS_KEY}
-      - BACKUP_FILE_PATH=/files
-      - LOG_DIR=/logs
+      PYTHONUNBUFFERED: 0
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_DEFAULT_USER: rabbitmquser
+      RABBITMQ_DEFAULT_PASS: pa55word
+      S3_REGION_NAME: ams3
+      S3_ENDPOINT_URI: https://ams3.digitaloceanspaces.com
+      S3_BUCKET_NAME: swat1
+      DO_ACCESS_KEY_ID: ${DO_ACCESS_KEY_ID}
+      DO_SECRET_ACCESS_KEY: ${DO_SECRET_ACCESS_KEY}
+      BACKUP_FILE_PATH: /files
+      LOG_DIR: /logs
 
+
+  api:
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./api
+    depends_on:
+      - rabbitmq
+    links:
+      - rabbitmq
+    volumes:
+      - ../api:/app
+      - ../files:/files
+      - ../logs:/logs
+    environment:
+      PYTHONUNBUFFERED: 0
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_DEFAULT_USER: rabbitmquser
+      RABBITMQ_DEFAULT_PASS: pa55word
+      S3_REGION_NAME: ams3
+      S3_ENDPOINT_URI: https://ams3.digitaloceanspaces.com
+      S3_BUCKET_NAME: swat1
+      DO_ACCESS_KEY_ID: ${DO_ACCESS_KEY_ID}
+      DO_SECRET_ACCESS_KEY: ${DO_SECRET_ACCESS_KEY}
+      LOG_DIR: /logs
+      # FLASK_DEBUG: 1
+      FLASK_APP: ./main.py
+    ports:
+      - '6080:5000' 

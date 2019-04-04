@@ -42,7 +42,7 @@ channel = connection.channel()
 
 
 channel.queue_declare(queue='spaces_backup_queue', durable=True)
-print(' [*] Started from Nodemon - Waiting for messages. To exit press CTRL+C')
+print(' [*] Waiting for messages. To exit press CTRL+C')
 
 s3 = boto3.client('s3',
                   region_name=S3_REGION_NAME,
@@ -55,11 +55,8 @@ s3 = boto3.client('s3',
 
 def download_file(file_name):
     try:
-        obj = s3.get_object(Bucket=S3_BUCKET_NAME, Key=file_name)
-        with open(os.path.join(BACKUP_FILE_PATH, file_name), 'wb') as filedesciptor:
-            buffer = json.loads(obj['Body'].read())
-            data = buffer['data']
-            filedesciptor.write(bytes(data))
+        with open(os.path.join(BACKUP_FILE_PATH, file_name), 'wb') as data:
+            s3.download_fileobj(S3_BUCKET_NAME, file_name, data)
     except Exception as e:
         logger.error("Unexpected error: %s" % e, exc_info=True)
 

@@ -26,4 +26,4 @@ export S3_BUCKET_NAME=swat1
 export BACKUP_FILE_PATH=$SCRIPTPATH/../files
 export LOG_DIR=$SCRIPTPATH/../logs
 
-python -u worker.py
+python -u main.py
