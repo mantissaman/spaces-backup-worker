@@ -64,9 +64,9 @@ def download_file(file_name):
 def delete_file(file_name):
     try:
         fileToRemove = os.path.join(BACKUP_FILE_PATH, file_name)
-        if os.path.isfile(fileToRemove):
-            subprocess.run(['rm', '-f', '--preserve-root', fileToRemove])
-            subprocess.run(['safe-rm', '-f', fileToRemove])
+        logger.info(f"Trying to delete {fileToRemove}")
+        if os.path.exists(fileToRemove):
+            os.remove(fileToRemove)
     except Exception as e:
         logger.error("Unexpected error: %s" % e, exc_info=True)
 

@@ -40,6 +40,6 @@ class Spaces:
     def delete_file(self, file_name):
         try:
             s3.delete_object(Bucket=S3_BUCKET_NAME, Key=file_name)
-            self.backup.enqueue(json.dumps({'operation':'DELETE', 'file_name': file.filename}, ensure_ascii=False).encode('utf8'))
+            self.backup.enqueue(json.dumps({'operation':'DELETE', 'file_name': file_name}, ensure_ascii=False).encode('utf8'))
         except Exception as e:
             logger.error("Unexpected error: %s" % e, exc_info=True)

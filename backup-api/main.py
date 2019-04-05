@@ -64,12 +64,23 @@ def refresh():
     }
     return jsonify(ret), 200
 
-@app.route("/api/files/",defaults={'key': None}, methods=['POST'])
+@app.route("/api/files",defaults={'key': None}, methods=['POST'])
 @app.route("/api/files/<key>", methods=['GET', 'DELETE'])
 @jwt_required
 def index(key):
     if request.method == 'POST':
-        return "POST"
+        logger.info("Landed in Post")
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            return jsonify({'status':'ERROR', 'msg':'Invalid Request'}), 200
+        file = request.files['file']
+        if file.filename == '':
+            return jsonify({'status':'ERROR', 'msg':'Please Select a file'}), 200
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            output = spaces.upload_file(file)
+            return jsonify({'status':'OK'}), 200
+
     elif request.method == 'GET':
         buffer=spaces.get_file(key)
         raw_mtype = magic.from_buffer(buffer, mime=True)
