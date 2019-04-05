@@ -1,8 +1,13 @@
-/env
-/worker/env
+/.env
 __pycache__
 *.log
 .DS_Store
 
 /files/*
 !/files/readme.txt
+
+/certs/*
+!/certs/readme.txt
+
+/logs/*
+!/logs/readme.txt

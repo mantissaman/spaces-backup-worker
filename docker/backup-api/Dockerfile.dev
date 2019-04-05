@@ -1,6 +1,7 @@
 FROM python:3-alpine
-RUN apk add --update bash netcat-openbsd
-
+RUN apk add --update bash netcat-openbsd openssh-keygen build-base && \
+    mkdir -p /certs
+    
 WORKDIR '/app'
 COPY ./requirements.txt ./
 

@@ -5,12 +5,12 @@ popd > /dev/null
 
 cd $SCRIPTPATH
 echo $SCRIPTPATH
-if [ ! -d "$SCRIPTPATH/env" ]
+if [ ! -d "$SCRIPTPATH/.env" ]
 then
 	echo "Creating Virtual Environment..."
-	python3 -m venv env
+	python3 -m venv .env
 fi
-source env/bin/activate
+source .env/bin/activate
 pip3 install -r  ../docker/worker/requirements.txt
 
 # export DO_ACCESS_KEY_ID="XXXX"

@@ -1,0 +1,6 @@
+Flask
+pika
+boto3
+pyyaml
+flask-jwt-extended
+python-magic

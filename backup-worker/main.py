@@ -1,5 +1,5 @@
 import pika
-import os
+import os, subprocess
 import json
 import boto3
 import io
@@ -63,7 +63,10 @@ def download_file(file_name):
 
 def delete_file(file_name):
     try:
-        s3.delete_object(Bucket=S3_BUCKET_NAME, Key=file_name)
+        fileToRemove = os.path.join(BACKUP_FILE_PATH, file_name)
+        if os.path.isfile(fileToRemove):
+            subprocess.run(['rm', '-f', '--preserve-root', fileToRemove])
+            subprocess.run(['safe-rm', '-f', fileToRemove])
     except Exception as e:
         logger.error("Unexpected error: %s" % e, exc_info=True)
 
